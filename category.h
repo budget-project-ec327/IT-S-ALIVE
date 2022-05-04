@@ -11,25 +11,26 @@ private:
     int temp_c = 0;
     setMatrix *instA;
     setMatrix *instB;
+
 public:
     float expense = 0;
     float balance;
     float Available_balance; // the value you would show
-    //totals
-    float T_O= 0 ;//other
-    float T_M = 0;//Medical
-    float T_T = 0;//Transpo
-    float T_F = 0;//Fun
-    float T_MB = 0;//Monthly bills
-    float T_FOO = 0;//Food
+    // totals
+    float T_O = 0;   // other
+    float T_M = 0;   // Medical
+    float T_T = 0;   // Transpo
+    float T_F = 0;   // Fun
+    float T_MB = 0;  // Monthly bills
+    float T_FOO = 0; // Food
     float T_TOTAL = 0;
-    //percentages
-    float P_O= T_O/T_TOTAL;
-    float P_M = T_M/T_TOTAL;
-    float P_T = T_T/T_TOTAL;
-    float P_F = T_F/T_TOTAL;
-    float P_MB = T_MB/T_TOTAL;
-    float P_FOO = T_FOO/T_TOTAL;
+    // percentages
+    float P_O = T_O / T_TOTAL;
+    float P_M = T_M / T_TOTAL;
+    float P_T = T_T / T_TOTAL;
+    float P_F = T_F / T_TOTAL;
+    float P_MB = T_MB / T_TOTAL;
+    float P_FOO = T_FOO / T_TOTAL;
     QString cat;
     QString name;
 
@@ -41,9 +42,6 @@ public:
     float peakExp();
     QString peakDesc();
     QString peakCat();
-
 };
-
-
 
 #endif // CATEGORY_H

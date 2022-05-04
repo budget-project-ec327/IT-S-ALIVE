@@ -32,17 +32,17 @@
  * i have no idea how to do anything graphical so good luck!
  */
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
     QApplication app(argc, argv);
 
     ListWidget window;
 
-
     window.setWindowTitle("BUdget");
     window.show();
 
-    //important! if you are ever changing the format of save files you need to completely erase them using this (insert all the files)
+    // important! if you are ever changing the format of save files you need to completely erase them using this (insert all the files)
     /*QFile saveFile("saved.txt");
     saveFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
     QTextStream s(&saveFile);

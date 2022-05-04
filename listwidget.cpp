@@ -377,7 +377,7 @@ void ListWidget::addItem()
             QString label = QString("Value");
             form.addRow(label, lineEdit);
         }
-         // writes whatever the user wrote to this thing to grab it later
+        // writes whatever the user wrote to this thing to grab it later
         fields << lineEdit;
     }
     QComboBox *comboBox = new QComboBox(&dialog);
@@ -409,7 +409,7 @@ void ListWidget::addItem()
             {
                 holdvalue = lineEdit->text();
             }
-             count++;
+            count++;
         }
         holdcategory = comboBox->currentText();
         // writes to lisitems
@@ -497,7 +497,7 @@ void ListWidget::editItem()
         {
             QLineEdit *lineEdit = new QLineEdit(&dialog);
             lineEdit->setPlaceholderText("No Change");
-           if (i == 1)
+            if (i == 1)
             {
                 QString label = QString("Name");
                 form.addRow(label, lineEdit);
@@ -507,7 +507,7 @@ void ListWidget::editItem()
                 QString label = QString("Value");
                 form.addRow(label, lineEdit);
             }
-             fields << lineEdit;
+            fields << lineEdit;
         }
         QComboBox *comboBox = new QComboBox(&dialog);
         comboBox->insertItem(1, "No Change");
@@ -538,7 +538,7 @@ void ListWidget::editItem()
                 {
                     holdvalue = lineEdit->text();
                 }
-                 count++;
+                count++;
             }
             holdcategory = comboBox->currentText();
             // puts the QStrings into a new item in listitems
@@ -670,7 +670,7 @@ void ListWidget::removeItem()
         QFormLayout form(&dialog);
         form.addRow(new QLabel("Are you sure you want to remove this item?"));
         QString holdid = allids->currentItem()->text();
-       QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
+        QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
         form.addRow(&buttonBox);
         QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
         QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
@@ -771,7 +771,7 @@ void ListWidget::setBudget()
     // if(i == 0) {
     QString label = QString("Amount: ");
     form.addRow(label, lineEdit);
-      // writes whatever the user wrote to this thing to grab it later
+    // writes whatever the user wrote to this thing to grab it later
     fields << lineEdit;
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
     form.addRow(&buttonBox);

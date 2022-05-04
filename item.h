@@ -2,11 +2,10 @@
 #define ITEM_H
 #include <QString>
 
-
 class item
 {
 public:
-    //if youre adding a new type of data to be stores in an item obviously put it here
+    // if youre adding a new type of data to be stores in an item obviously put it here
     int id;
     QString name,
         category;

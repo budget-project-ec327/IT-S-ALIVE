@@ -32,60 +32,59 @@
 #include <QSpacerItem>
 #include <QLegend>
 
-class ListWidget : public QWidget {
+class ListWidget : public QWidget
+{
 
     Q_OBJECT
 
 public:
-    //put any more important variables here
-    //like a total balance of money!
+    // put any more important variables here
+    // like a total balance of money!
     QList<item> listitems;
     int numitems;
     ListWidget(QWidget *parent = 0);
-    //void filestuff();
-    //QPieSeries *series;
+    // void filestuff();
+    // QPieSeries *series;
     float balance = 1000,
-    T_total = 0,
-    T_food = 0,
-    T_bills = 0,
-    T_fun = 0,
-    T_trans = 0,
-    T_med = 0,
-    T_other = 0;
-    //static ListWidget * Get() { return widgets; }
-
+          T_total = 0,
+          T_food = 0,
+          T_bills = 0,
+          T_fun = 0,
+          T_trans = 0,
+          T_med = 0,
+          T_other = 0;
+    // static ListWidget * Get() { return widgets; }
 
 private slots:
-    //put buttons here
+    // put buttons here
     void addItem();
     void editItem();
     void removeItem();
     void setBudget();
 
-
 private:
-    //this is where you add new text boxes
+    // this is where you add new text boxes
     QLabel *totalbudget,
-    *totalfood,
-    *totalbills,
-    *totalfun,
-    *totaltrans,
-    *totalmedical,
-    *totalother,
-    *amtremaining;
+        *totalfood,
+        *totalbills,
+        *totalfun,
+        *totaltrans,
+        *totalmedical,
+        *totalother,
+        *amtremaining;
     QPieSlice *leftslice;
     QPieSeries *series;
     QListWidget *allnames,
-    *allvalues,
-    *allcategories,
-    *allids;
-    //this is new buttons
+        *allvalues,
+        *allcategories,
+        *allids;
+    // this is new buttons
     QPushButton *add,
-    *edit,
-    *remove,
-    *budget;
+        *edit,
+        *remove,
+        *budget;
 
-    //static ListWidget * widgets;
+    // static ListWidget * widgets;
 
     QCalendarWidget *calendar;
 };
