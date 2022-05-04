@@ -1,0 +1,41 @@
+QT       += core gui
+QT	 += charts
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG += c++17
+
+# You can make your code fail to compile if it uses deprecated APIs.
+# In order to do so, uncomment the following line.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+SOURCES += \
+    item.cpp \
+    listwidget.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    category.cpp \
+    FileManager.cpp
+     #tablemodel.cpp
+
+HEADERS += \
+    item.h \
+    listwidget.h \
+    mainwindow.h \
+    category.h \
+    FileManager.h
+     #tablemodel.h
+
+FORMS += \
+    mainwindow.ui
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    TEST \
+    testing123.txt
+
+RESOURCES += \
+    resources_i_guess.qrc
