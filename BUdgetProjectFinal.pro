@@ -19,7 +19,8 @@ HEADERS += \
     item.h \
     listwidget.h \
     mainwindow.h \
-    category.h
+    category.h \
+    setMatrix.h
 
 FORMS += \
     mainwindow.ui

@@ -1,7 +1,7 @@
 #include "listwidget.h"
 #include "item.h"
 #include "category.h"
-#include "FileManager.h"
+//#include "FileManager.h"
 #include <QDebug>
 // this gets run at the begining of the program, sets everything up
 ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
@@ -247,7 +247,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other));
+    series->append("Remaining", balance - (T_total));
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
     QChart *chart = new QChart();
@@ -273,7 +273,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     totaltrans = new QLabel(QString::number(T_trans));
     totalmedical = new QLabel(QString::number(T_med));
     totalother = new QLabel(QString::number(T_other));
-    amtremaining = new QLabel(QString::number(balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other)));
+    amtremaining = new QLabel(QString::number(QString::number(balance - (T_total), 'f', 2). toDouble(), 'g', 10));
     QLabel *labelbudget = new QLabel("Total budget: ");
     QLabel *labelfood = new QLabel("Food: ");
     QLabel *labelbills = new QLabel("Monthly bills: ");
@@ -467,7 +467,7 @@ void ListWidget::addItem()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other));
+    series->append("Remaining", balance - (T_total));
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
     totalbudget->setText(QString::number(balance));
@@ -477,7 +477,7 @@ void ListWidget::addItem()
     totaltrans->setText(QString::number(T_trans));
     totalmedical->setText(QString::number(T_med));
     totalother->setText(QString::number(T_other));
-    amtremaining->setText(QString::number(balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other)));
+    amtremaining->setText(QString::number(QString::number(balance - (T_total), 'f', 2). toDouble(), 'g', 10));
 }
 // called when "edit" is pressed
 void ListWidget::editItem()
@@ -648,7 +648,7 @@ void ListWidget::editItem()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other));
+    series->append("Remaining", balance - (T_total));
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
     totalbudget->setText(QString::number(balance));
@@ -658,7 +658,7 @@ void ListWidget::editItem()
     totaltrans->setText(QString::number(T_trans));
     totalmedical->setText(QString::number(T_med));
     totalother->setText(QString::number(T_other));
-    amtremaining->setText(QString::number(balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other)));
+    amtremaining->setText(QString::number(QString::number(balance - (T_total), 'f', 2). toDouble(), 'g', 10));
 }
 // called when "Remove" is pressed
 void ListWidget::removeItem()
@@ -742,7 +742,7 @@ void ListWidget::removeItem()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other));
+    series->append("Remaining", balance - (T_total));
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
     totalbudget->setText(QString::number(balance));
@@ -752,7 +752,7 @@ void ListWidget::removeItem()
     totaltrans->setText(QString::number(T_trans));
     totalmedical->setText(QString::number(T_med));
     totalother->setText(QString::number(T_other));
-    amtremaining->setText(QString::number(balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other)));
+    amtremaining->setText(QString::number(QString::number(balance - (T_total), 'f', 2). toDouble(), 'g', 10));
 }
 void ListWidget::setBudget()
 {
@@ -796,7 +796,7 @@ void ListWidget::setBudget()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other));
+    series->append("Remaining", balance - (T_total));
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
     totalbudget->setText(QString::number(balance));
@@ -806,5 +806,5 @@ void ListWidget::setBudget()
     totaltrans->setText(QString::number(T_trans));
     totalmedical->setText(QString::number(T_med));
     totalother->setText(QString::number(T_other));
-    amtremaining->setText(QString::number(balance - (T_food + T_bills + T_fun + T_trans + T_med + T_other)));
+    amtremaining->setText(QString::number(QString::number(balance - (T_total), 'f', 2). toDouble(), 'g', 10));
 }
