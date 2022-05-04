@@ -13,17 +13,13 @@ SOURCES += \
     listwidget.cpp \
     main.cpp \
     mainwindow.cpp \
-    category.cpp \
-    FileManager.cpp
-     #tablemodel.cpp
+    category.cpp
 
 HEADERS += \
     item.h \
     listwidget.h \
     mainwindow.h \
-    category.h \
-    FileManager.h
-     #tablemodel.h
+    category.h
 
 FORMS += \
     mainwindow.ui
