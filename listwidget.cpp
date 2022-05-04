@@ -14,7 +14,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     QLabel *itemid = new QLabel("Item ID");
     QLabel *itemcategory = new QLabel("Category");
     QLabel *itemvalue = new QLabel("Amount (USD)");
-    
+
     QHBoxLayout *layoutTop = new QHBoxLayout();
     QVBoxLayout *layoutFull = new QVBoxLayout();
 
@@ -51,7 +51,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     allids = new QListWidget;
     allids->setStyleSheet("QListWidget::item { background-color: white;border-bottom: 1px solid black; }"
                           "QListWidget::item:selected{color: #333538;background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #cdcdcd, stop: 1 #ababab); border-top: 1px solid;border-top-color: #a8abad;border-bottom: 1px solid;border-bottom-color: #bfc7ce;}");
-    
+
     // sets up all the balances stuff
         // some variables
     QStringList dstringList;
@@ -106,7 +106,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     QTextStream d(&killdeleted);
     d << "";
     killdeleted.close();
-    
+
         // reads any changes made last session
         // puts them in a list of items to copy from
     QList<item> changeditems;
@@ -267,8 +267,14 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_total));
-
+    if (balance - (T_total) > 0)
+    {
+        series->append("Remaining", balance - (T_total));
+    }
+    else
+    {
+        series->append("Remaining", 0);
+    }
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
 
@@ -300,7 +306,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     totalmedical = new QLabel(QString::number(T_med));
     totalother = new QLabel(QString::number(T_other));
     amtremaining = new QLabel(QString::number(QString::number(balance - (T_total), 'f', 2).toDouble(), 'g', 10));
-    
+
     QLabel *labelbudget = new QLabel("Total budget: ");
     QLabel *labelfood = new QLabel("Food: ");
     QLabel *labelbills = new QLabel("Monthly bills: ");
@@ -309,7 +315,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     QLabel *labelmedical = new QLabel("Medical: ");
     QLabel *labelother = new QLabel("Other: ");
     QLabel *labelremaining = new QLabel("Remaining: ");
-    
+
     layoutNumLabels->addWidget(labelbudget);
     layoutNumbers->addWidget(totalbudget, Qt::AlignRight);
     layoutNumLabels->addWidget(labelfood);
@@ -325,7 +331,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     layoutNumLabels->addWidget(labelother);
     layoutNumbers->addWidget(totalother, Qt::AlignRight);
     layoutNumLabels->addWidget(labelremaining);
-    
+
     layoutNumbers->addWidget(amtremaining, Qt::AlignRight);
     layoutNumbers->addLayout(layouttotal);
     layoutNumbers->addLayout(layoutfood);
@@ -335,7 +341,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     layoutNumbers->addLayout(layoutmed);
     layoutNumbers->addLayout(layoutother);
     layoutNumbers->addLayout(layoutremaining);
-   
+
     // lotsa graphical stuff, heres where you add new buttons/text boxes
     layoutLabels->addWidget(itemname, 1, Qt::AlignCenter);
     layoutLabels->addWidget(allnames, 12, Qt::AlignCenter);
@@ -345,7 +351,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     layoutAmt->addWidget(allvalues, 12, Qt::AlignCenter);
     layoutCat->addWidget(itemcategory, 1, Qt::AlignCenter);
     layoutCat->addWidget(allcategories, 12, Qt::AlignCenter);
-   
+
     // buttons over here
     layoutbuttons->setSpacing(3);
     layoutbuttons->addStretch(1);
@@ -354,7 +360,7 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     layoutbuttons->addWidget(remove);
     layoutbuttons->addWidget(budget);
     layoutbuttons->addStretch(1);
-   
+
     // text boxes over here
     layout1->addLayout(layoutId);
     layout1->addLayout(layoutLabels);
@@ -372,13 +378,13 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     allnames->setSelectionMode(QAbstractItemView::NoSelection);
     allvalues->setSelectionMode(QAbstractItemView::NoSelection);
     allcategories->setSelectionMode(QAbstractItemView::NoSelection);
-  
+
     // more important button stuff probably
     connect(add, &QPushButton::clicked, this, &ListWidget::addItem);
     connect(edit, &QPushButton::clicked, this, &ListWidget::editItem);
     connect(remove, &QPushButton::clicked, this, &ListWidget::removeItem);
     connect(budget, &QPushButton::clicked, this, &ListWidget::setBudget);
- 
+
     // final graphical thing?
     setLayout(layoutFull);
     setFixedSize(950, 700);
@@ -390,14 +396,16 @@ void ListWidget::addItem()
     QString holdname,
         holdvalue,
         holdcategory;
-    
+
+    //float holdvalue;
+
     // important button things if you want to make a button copy paste from this or remove theres a lot of important parts
     QDialog dialog(this);
     QFormLayout form(&dialog);
-  
+
     // this displays a message before the buttons
     form.addRow(new QLabel("Add a new transaction"));
- 
+
     // this the names of the buttons
     QList<QLineEdit *> fields;
     for (int i = 0; i < 2; ++i)
@@ -426,18 +434,18 @@ void ListWidget::addItem()
     comboBox->insertItem(6, "Other");
     QString label = QString("Category");
     form.addRow(label, comboBox);
- 
+
     // this makes the ok/cancel buttons at bottom
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
     form.addRow(&buttonBox);
     QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
     QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-  
+
     // if ok was pressed do this stuff
     if (dialog.exec() == QDialog::Accepted)
     {
         int count = 0;
-   
+
         // grabs data from user input and puts it into a bunch of QStrings to use
         foreach (QLineEdit *lineEdit, fields)
         {
@@ -447,16 +455,16 @@ void ListWidget::addItem()
             }
             if (count == 1)
             {
-                holdvalue = lineEdit->text();
+                holdvalue = (lineEdit->text());
             }
             count++;
         }
         holdcategory = comboBox->currentText();
- 
+
         // writes to lisitems
         numitems++;
         listitems.append(item(numitems, holdname, holdvalue.toFloat(), holdcategory));
- 
+
         // writes to text boxes
         allids->addItem(QString::number(numitems));
         allids->setCurrentRow(allids->count() - 1);
@@ -466,7 +474,7 @@ void ListWidget::addItem()
         allvalues->setCurrentRow(allvalues->count() - 1);
         allcategories->addItem(holdcategory);
         allcategories->setCurrentRow(allcategories->count() - 1);
- 
+
         // update pie chart values
         T_total += holdvalue.toFloat();
         if (holdcategory == "Food")
@@ -493,7 +501,7 @@ void ListWidget::addItem()
         {
             T_other += holdvalue.toFloat();
         }
- 
+
         // saves the new item in the save file
         QFile savedFile("saved.txt");
         savedFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
@@ -504,7 +512,7 @@ void ListWidget::addItem()
           << holdcategory << "\n";
         savedFile.close();
     }
- 
+
     series->clear();
     series->append("Food", T_food);
     series->append("Monthly Bills", T_bills);
@@ -512,11 +520,18 @@ void ListWidget::addItem()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_total));
- 
+
+    if (balance - (T_total) > 0)
+    {
+        series->append("Remaining", balance - (T_total));
+    }
+    else
+    {
+        series->append("Remaining", 0);
+    }
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
- 
+
     totalbudget->setText(QString::number(balance));
     totalfood->setText(QString::number(T_food));
     totalbills->setText(QString::number(T_bills));
@@ -536,7 +551,7 @@ void ListWidget::editItem()
         QDialog dialog(this);
         QFormLayout form(&dialog);
         form.addRow(new QLabel("What is the ID of transaction you want to edit? (leave blank what you don't want to changed)"));
-        
+
         QString holdname,
             holdvalue,
             holdcategory;
@@ -558,7 +573,7 @@ void ListWidget::editItem()
             }
             fields << lineEdit;
         }
-      
+
         QComboBox *comboBox = new QComboBox(&dialog);
         comboBox->insertItem(1, "No Change");
         comboBox->insertItem(2, "Food");
@@ -567,15 +582,15 @@ void ListWidget::editItem()
         comboBox->insertItem(5, "Transportation");
         comboBox->insertItem(6, "Medical");
         comboBox->insertItem(7, "Other");
-       
+
         QString label = QString("Category");
         form.addRow(label, comboBox);
-       
+
         QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
         form.addRow(&buttonBox);
         QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
         QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-      
+
         // if ok was pressed do this stuff
         if (dialog.exec() == QDialog::Accepted)
         {
@@ -594,7 +609,7 @@ void ListWidget::editItem()
                 count++;
             }
             holdcategory = comboBox->currentText();
-         
+
             // puts the QStrings into a new item in listitems
             // this is the item that youre editing
             item h = listitems.at(0); // this is just so it doesnt yell at me, but is a bug cuz doesnt stop user from inputting number out of bounds
@@ -633,11 +648,11 @@ void ListWidget::editItem()
                     }
                 }
             }
-         
+
             // this is the row youre rewriting in the text boxes
             // I had an aneurysm writing this line ignore the possible warning
             int r = allids->row(allids->findItems(holdid, Qt::MatchExactly).first());
-         
+
             // if the user didnt input a change for one of the datavalues its left alone
             if (!(holdname == ""))
             {
@@ -660,7 +675,7 @@ void ListWidget::editItem()
                 delete dcat;
                 allcategories->insertItem(r, holdcategory);
             }
-         
+
             // writes to change file
             QFile changeFile("changed.txt");
             changeFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
@@ -670,7 +685,7 @@ void ListWidget::editItem()
               << h.value << "\n"
               << h.category << "\n";
             changeFile.close();
-        
+
             // adds in new pie chart values
             T_total += h.value;
             if (h.category == "Food")
@@ -699,7 +714,7 @@ void ListWidget::editItem()
             }
         }
     }
-  
+
     series->clear();
     series->append("Food", T_food);
     series->append("Monthly Bills", T_bills);
@@ -707,11 +722,17 @@ void ListWidget::editItem()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_total));
-  
+    if (balance - (T_total) > 0)
+    {
+        series->append("Remaining", balance - (T_total));
+    }
+    else
+    {
+        series->append("Remaining", 0);
+    }
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
-  
+
     totalbudget->setText(QString::number(balance));
     totalfood->setText(QString::number(T_food));
     totalbills->setText(QString::number(T_bills));
@@ -731,12 +752,12 @@ void ListWidget::removeItem()
         QFormLayout form(&dialog);
         form.addRow(new QLabel("Are you sure you want to remove this item?"));
         QString holdid = allids->currentItem()->text();
-       
+
         QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
         form.addRow(&buttonBox);
         QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
         QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-       
+
         // heres the if they pressed ok do stuff
         if (dialog.exec() == QDialog::Accepted)
         {
@@ -777,7 +798,7 @@ void ListWidget::removeItem()
                 }
             }
             int r = allids->row(allids->findItems(holdid, Qt::MatchExactly).first());
-           
+
             // stops all the text boxes from showing the item
             QListWidgetItem *dname = allnames->takeItem(r);
             delete dname;
@@ -787,7 +808,7 @@ void ListWidget::removeItem()
             delete dcat;
             QListWidgetItem *did = allids->takeItem(r);
             delete did;
-          
+
             // adds the deletion to the save files
             QFile deletedFile("deleted.txt");
             deletedFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
@@ -800,7 +821,7 @@ void ListWidget::removeItem()
             QString holdid = allids->currentItem()->text();
         }
     }
-   
+
     series->clear();
     series->append("Food", T_food);
     series->append("Monthly Bills", T_bills);
@@ -808,11 +829,17 @@ void ListWidget::removeItem()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_total));
-   
+    if (balance - (T_total) > 0)
+    {
+        series->append("Remaining", balance - (T_total));
+    }
+    else
+    {
+        series->append("Remaining", 0);
+    }
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
-    
+
     totalbudget->setText(QString::number(balance));
     totalfood->setText(QString::number(T_food));
     totalbills->setText(QString::number(T_bills));
@@ -839,12 +866,12 @@ void ListWidget::setBudget()
     form.addRow(label, lineEdit);
     // writes whatever the user wrote to this thing to grab it later
     fields << lineEdit;
-    
+
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
     form.addRow(&buttonBox);
     QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
     QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-    
+
     // if ok was pressed do this stuff
     if (dialog.exec() == QDialog::Accepted)
     {
@@ -864,11 +891,18 @@ void ListWidget::setBudget()
     series->append("Transportation", T_trans);
     series->append("Medical", T_med);
     series->append("Other", T_other);
-    series->append("Remaining", balance - (T_total));
-    
+    if (balance - (T_total) > 0)
+    {
+        series->append("Remaining", balance - (T_total));
+    }
+    else
+    {
+        series->append("Remaining", 0);
+    }
+
     leftslice = series->slices().at(6);
     leftslice->setBrush(Qt::green);
-    
+
     totalbudget->setText(QString::number(balance));
     totalfood->setText(QString::number(T_food));
     totalbills->setText(QString::number(T_bills));
